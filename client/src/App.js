@@ -9,6 +9,8 @@ function App() {
   const ctxRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("black");
+//rooom add
+  const [roomId, setRoomId] = useState("");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -38,6 +40,10 @@ function App() {
     const canvas = canvasRef.current;
     ctxRef.current.clearRect(0, 0, canvas.width, canvas.height);
     });
+
+    const room = prompt("Enter room ID:");
+    setRoomId(room);
+    socket.emit("joinRoom", room);
 
     const canvas = canvasRef.current;
     canvas.width = 500;

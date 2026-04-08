@@ -15,24 +15,32 @@ io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("startDrawing", (data) => {
-  socket.broadcast.emit("startDrawing", data);
+  socket.to(socket.roomId).emit("startDrawing", data);
   });
 
   socket.on("draw", (data) => {
     // console.log("received draw", data);
-    socket.broadcast.emit("draw", data);
+    socket.to(socket.roomId).emit("draw", data);
   });
 
   socket.on("stopDrawing", () => {
-    socket.broadcast.emit("stopDrawing");
+    socket.to(socket.roomId).emit("stopDrawing");
   });
+
   socket.on("disconnect", () => {
     console.log("User disconnected:", socket.id);
   });
 
   socket.on("clearCanvas", () => {
-  io.emit("clearCanvas");
+  socket.to(socket.roomId).emit("clearCanvas");
   });
+
+  socket.on("joinRoom", (roomId) => {
+  socket.join(roomId);
+  console.log(`User ${socket.id} joined room ${roomId}`);
+  socket.roomId = roomId;
+});
+
 });
 
 
