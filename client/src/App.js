@@ -9,8 +9,12 @@ function App() {
   const ctxRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("black");
+  
+
 //rooom add
   const [roomId, setRoomId] = useState("");
+
+  const [isJoined, setIsJoined] = useState(false); //check if user is joined
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -41,9 +45,7 @@ function App() {
     ctxRef.current.clearRect(0, 0, canvas.width, canvas.height);
     });
 
-    const room = prompt("Enter room ID:");
-    setRoomId(room);
-    socket.emit("joinRoom", room);
+    
 
     const canvas = canvasRef.current;
     canvas.width = 500;
@@ -56,6 +58,13 @@ function App() {
 
     ctxRef.current = ctx;
   }, []);
+
+  const handleJoinRoom = () => {
+    if (roomId.trim() !== "") {
+      socket.emit("joinRoom", roomId);
+      setIsJoined(true);
+    }
+  };
 
   const startDrawing = (e) => {
     setDrawing(true);
